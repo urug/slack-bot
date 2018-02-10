@@ -1,6 +1,6 @@
 workflows:
   version: 2
-  test:
+  build:
     jobs:
       - tests
       - deploy:
@@ -13,7 +13,6 @@ workflows:
 
 defaults: &defaults
   working_directory: ~/urug-bot
-  resource_class: small
   docker:
     - image: &circle_image circleci/ruby:2.3.3
 
@@ -51,15 +50,16 @@ jobs:
         path: /tmp/test-results
 
   deploy:
-    <<: *defaults
-    steps:
-      - checkout
-
-      - restore_cache:
-          key: urug-bot-{{ checksum "Gemfile.lock" }}
-      - run:
-          name: Deploy
-          command: |
-            echo "I would deploy to production, only if master here"
-
-# Kick a build
+      <<: *defaults
+      steps:
+        - checkout
+        - run:
+            name: Run setup script
+            command: bash .circleci/setup-heroku.sh
+        - add_ssh_keys:
+            fingerprints:
+              - "5f:3d:78:5d:45:9c:57:d8:1f:35:3e:b4:0d:05:5a:3e"
+        - run:
+            name: Deploy Master to Heroku
+            command: |
+              git push heroku master
