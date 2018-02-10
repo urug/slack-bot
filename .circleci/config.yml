@@ -17,10 +17,9 @@ defaults: &defaults
   docker:
     - image: &circle_image circleci/ruby:2.3.3
 
-
 version: 2
 jobs:
-  rspec:
+  tests:
     <<: *defaults
     docker:
       - image: *circle_image
