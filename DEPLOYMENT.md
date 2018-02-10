@@ -1,3 +1,3 @@
 # Deployment
 
-Coming soon.
+Green Master builds will automatically be deployed to Heroku.
