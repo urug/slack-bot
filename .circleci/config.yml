@@ -7,7 +7,7 @@ workflows:
           filters:
             branches:
                   only:
-                    - heroku
+                    - master
           requires:
             - tests
 
