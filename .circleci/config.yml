@@ -62,3 +62,5 @@ jobs:
           name: Deploy
           command: |
             echo "I would deploy to production, only if master here"
+
+# Kick a build
