@@ -7,6 +7,7 @@ gem 'puma'
 gem 'sinatra'
 gem 'dotenv'
 gem 'celluloid-io'
+gem 'rake'
 
 group :development, :test do
   gem 'rake'
