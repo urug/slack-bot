@@ -52,6 +52,7 @@ jobs:
   deploy:
       <<: *defaults
       steps:
+        - checkout
         - run:
             name: Run setup script
             command: bash .circleci/setup-heroku.sh
