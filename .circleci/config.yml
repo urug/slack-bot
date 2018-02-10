@@ -62,4 +62,4 @@ jobs:
         - run:
             name: Deploy Master to Heroku
             command: |
-              git push heroku master
+              git push --force git@heroku.com:urug-bot.git HEAD:refs/heads/master
