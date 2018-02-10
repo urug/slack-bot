@@ -1,0 +1,64 @@
+workflows:
+  version: 2
+  test:
+    jobs:
+      - tests
+      - deploy:
+          filters:
+            branches:
+                  only:
+                    - master
+          requires:
+            - tests
+
+defaults: &defaults
+  working_directory: ~/urug-bot
+  resource_class: small
+  docker:
+    - image: &circle_image circleci/ruby:2.3.3
+
+
+version: 2
+jobs:
+  rspec:
+    <<: *defaults
+    docker:
+      - image: *circle_image
+        environment:
+          TESTOPTS: "--ci-dir=/tmp/test-results"
+          APP_ENV: test
+    steps:
+      - checkout
+
+      # Restore bundle cache
+      - type: cache-restore
+        key: urug-bot-{{ checksum "Gemfile.lock" }}
+
+      # Bundle install dependencies
+      - run: bundle install --path vendor/bundle
+
+      # Store bundle cache
+      - type: cache-save
+        key: urug-bot-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+
+      # Run rspec
+      - type: shell
+        command: bundle exec rspec spec
+
+      # Save artifacts
+      - type: store_test_results
+        path: /tmp/test-results
+
+  deploy:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: urug-bot-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Deploy
+          command: |
+            echo "I would deploy to production, only if master here"
