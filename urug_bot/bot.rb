@@ -9,7 +9,7 @@ module UrugBot
       end
 
       command 'reddit' do
-        desc 'Returns back 3 sorted posts for a given subreddit. `@reddit-bot reddit <subreddit> <top|new|controversial|rising|hot>`'
+        desc 'Returns back 3 sorted posts for a given subreddit. `@urug-bot reddit <subreddit> <top|new|controversial|rising|hot>`'
       end
     end
   end
