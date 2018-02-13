@@ -13,16 +13,23 @@ module UrugBot
       def posts_from_response(response)
         response['data']['children'].first(3).map do |post|
           {
-            url: post['data']['url'],
-            title: post['data']['title'],
-            score: post['data']['score'],
-            permalink: post['data']['permalink'],
-            self_post: post['data']['is_self'],
-            body: post['data']['self_text'],
-            subreddit: post['data']['subreddit'],
-            num_comments: post['data']['num_comments'],
+            url:          post.dig('data', 'url'),
+            title:        post.dig('data', 'title'),
+            score:        post.dig('data', 'score'),
+            permalink:    post.dig('data', 'permalink'),
+            self_post:    post.dig('data', 'is_self'),
+            body:         post.dig('data', 'self_text'),
+            subreddit:    post.dig('data', 'subreddit'),
+            num_comments: post.dig('data', 'num_comments'),
+            created_at:   post.dig('data', 'created_utc'),
+            thumbnail:    unescape_url(post.dig('data', 'thumbnail')),
+            image_url:    unescape_url(post.dig('data', 'preview', 'images')&.first&.dig('source', 'url')),
           }
         end
+      end
+
+      def unescape_url(url)
+        CGI.unescapeHTML(url.to_s)
       end
     end
   end

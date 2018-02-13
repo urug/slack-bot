@@ -1,27 +1,22 @@
 module UrugBot
   module Views
     class Posts < SlackRubyBot::MVC::View::Base
+      COLORS = ['#008500', '#0050F8', '#FFEC32']
       def display_posts(posts, sort_by, subreddit)
         message = {
           "text": "Here are the first 3 #{sort_by} posts on /r/#{subreddit}",
-          "attachments": posts.map do |post|
+          "attachments": posts.each_with_index.map do |post, index|
             {
               "fallback": post[:title],
-              "color": "#ff5700",
+              "color": COLORS[index],
               "title": post[:title],
               "title_link": "http://www.reddit.com#{post[:permalink]}",
-              "text": post[:self_post] ? post[:body] : post[:url],
+              "text": post[:body],
+              "thumb_url": post[:thumbnail],
+              "footer": "#{post[:self_post] ? 'Self' : 'Link'} posted to /r/#{post[:subreddit]}",
+              "footer_icon": "https://www.redditstatic.com/icon.png",
+              "ts": post[:created_at],
               "fields": [
-                {
-                  "title": "Type",
-                  "value": post[:self_post] ? 'Self' : 'Link',
-                  "short": true
-                },
-                {
-                  "title": "Subreddit",
-                  "value": "/r/#{post[:subreddit]}",
-                  "short": true
-                },
                 {
                   "title": "Score",
                   "value": post[:score],
@@ -31,6 +26,11 @@ module UrugBot
                   "title": "Comments",
                   "value": post[:num_comments],
                   "short": true
+                },
+                {
+                  "title": "Image Link",
+                  "value": post[:image_url],
+                  "short": false
                 }
               ]
             }
